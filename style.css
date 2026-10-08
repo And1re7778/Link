@@ -22,6 +22,8 @@
   --l-quimica: #1E9E57; 
   --l-sistemas: #00A3E0; 
   --l-electronica: #7A3FB5; 
+  --l-alimentos: #E55B13;
+  --l-mecanica-ind: #4A5568;
   --l-otra: #6B7A90;
   --signal: #FFC72C;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1); 
@@ -202,8 +204,17 @@ main { padding-left: var(--rail); }
 .axis-panel h3 { font-size: clamp(1.6rem, 2.8vw, 2.2rem); margin-bottom: 10px; }
 .axis-panel > p { color: var(--ink-2); max-width: 56ch; font-size: 1.1rem; }
 .line-strip { list-style: none; margin: 32px 0 0; padding: 0 0 0 6px; position: relative; }
-.line-strip::before { content: ""; position: absolute; left: 19px; top: 30px; bottom: 30px; width: 12px; border-radius: 6px; background: var(--c); }
 .line-strip li { position: relative; padding: 12px 0 12px 54px; font-size: 1.08rem; font-weight: 600; line-height: 1.4; }
+.line-strip::before {
+    content: "";
+    position: absolute;
+    left: 19px; /* Alineación perfecta al centro de las bolitas */
+    top: 30px; /* Acorta la línea por arriba */
+    bottom: 30px; /* Acorta la línea por abajo */
+    width: 12px;
+    border-radius: 6px;
+    background: var(--c);
+}
 
 /* Aquí está el código CSS corregido que centró las bolitas */
 .line-strip li::before {
@@ -222,7 +233,6 @@ main { padding-left: var(--rail); }
 
 .line-strip li small { display: block; font-weight: 400; color: var(--ink-2); font-size: .95rem; margin-top: 2px; }
 
-/* Código CSS corregido para la bolita hub amarilla */
 .line-strip li.is-hub::before {
     width: 34px;
     height: 34px;
@@ -235,11 +245,31 @@ main { padding-left: var(--rail); }
 
 /* Candidatos */
 .cands-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; }
-.cands { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: clamp(16px, 2.4vw, 28px); margin-top: 44px; list-style: none; padding: 0; }
-.pass { background: var(--paper); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; position: relative; transition: transform 300ms var(--ease-out), box-shadow 300ms ease; }
+
+/* Transformamos la cuadrícula en un slider horizontal */
+.cands { 
+    display: flex; 
+    gap: clamp(16px, 2.4vw, 28px); 
+    margin-top: 44px; 
+    list-style: none; 
+    padding: 12px 4px 32px 4px; /* Padding extra abajo para que la sombra no se corte */
+    overflow-x: auto; 
+    scroll-snap-type: x mandatory; /* Fuerza a que las tarjetas se alineen al hacer scroll */
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Oculta la barra en Firefox */
+}
+.cands::-webkit-scrollbar { display: none; /* Oculta la barra en Chrome/Safari */ }
+
+/* Fijamos el ancho de las tarjetas para que no se encojan */
+.pass { 
+    flex: 0 0 clamp(260px, 75vw, 320px); /* Tamaño adaptable a móviles y PC */
+    scroll-snap-align: start; /* El slider se detiene al inicio de cada tarjeta */
+    background: var(--paper); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; position: relative; transition: transform 300ms var(--ease-out), box-shadow 300ms ease; 
+}
 @media (hover: hover) { .pass:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgba(10, 26, 51, .08), 0 18px 40px -12px rgba(10, 26, 51, .3); } }
+
 .pass__photo { aspect-ratio: 4/5; background: #DDE5EE; position: relative; overflow: hidden; }
-.pass__photo img { width: 100%; height: 100%; object-fit: cover; }
+.pass__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .pass__photo .ph { position: absolute; inset: 0; display: grid; place-items: center; color: var(--rule-strong); }
 .pass__photo .ph svg { width: 72px; height: 72px; }
 .pass__band { height: 12px; background: var(--c, var(--navy)); }
@@ -249,6 +279,14 @@ main { padding-left: var(--rail); }
 .pass__career { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--ink-2); font-size: .95rem; margin-top: 2px; }
 .pass__career .bul { width: 26px; height: 26px; font-size: .75rem; }
 .pass__bio { margin: 10px 0 0; color: var(--ink); font-size: 1rem; line-height: 1.55; }
+
+/* Estilos de los botones del slider */
+.slider-controls { display: flex; gap: 12px; }
+.slider-btn { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--rule); background: transparent; color: var(--navy); display: grid; place-items: center; cursor: pointer; transition: all 200ms ease; }
+@media (hover: hover) { .slider-btn:hover { border-color: var(--navy); background: var(--paper); transform: scale(1.05); } }
+.slider-btn:active { transform: scale(0.95); }
+.slider-btn svg { width: 22px; height: 22px; }
+
 .empty { margin-top: 44px; border-radius: var(--r-lg); border: 3px dashed var(--rule-strong); padding: clamp(28px, 5vw, 56px); display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; background: rgba(255, 255, 255, .5); }
 .empty svg { width: 120px; height: auto; }
 .empty h3 { font-size: 1.6rem; margin-bottom: 8px; }

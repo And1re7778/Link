@@ -4,24 +4,28 @@
     document.documentElement.classList.add("js");
 
     var CAREERS = [
+        { id: "alimentos", name: "Alimentos", l: "A", c: "var(--l-alimentos)" },
         { id: "civil", name: "Civil", l: "C", c: "var(--l-civil)" },
         { id: "industrial", name: "Industrial", l: "I", c: "var(--l-industrial)", light: true },
         { id: "mecanica", name: "Mecánica", l: "M", c: "var(--l-mecanica)" },
         { id: "quimica", name: "Química", l: "Q", c: "var(--l-quimica)" },
         { id: "sistemas", name: "Sistemas", l: "S", c: "var(--l-sistemas)" },
-        { id: "electronica", name: "Electrónica", l: "E", c: "var(--l-electronica)" }
+        { id: "electronica", name: "Electrónica", l: "E", c: "var(--l-electronica)" },
+        { id: "mecanica-ind", name: "Mecánica Ind.", l: "MI", c: "var(--l-mecanica-ind)" }
     ];
     var byId = {};
     CAREERS.forEach(function(c) { byId[c.id] = c; });
 
     /* ---------- Map ---------- */
     var MAP = [
-        { id: "civil", d: "M48 118H196L292 214L318 246", b: [48, 118], t: [34, 90, "start"] },
-        { id: "industrial", d: "M48 300H300", b: [48, 300], t: [34, 272, "start"] },
-        { id: "mecanica", d: "M48 482H196L292 386L318 354", b: [48, 482], t: [34, 530, "start"] },
-        { id: "quimica", d: "M672 118H524L428 214L402 246", b: [672, 118], t: [686, 90, "end"] },
-        { id: "sistemas", d: "M672 300H420", b: [672, 300], t: [686, 272, "end"] },
-        { id: "electronica", d: "M672 482H524L428 386L402 354", b: [672, 482], t: [686, 530, "end"] }
+        { id: "alimentos", d: "M48 118H180L300 238", b: [48, 118], t: [34, 90, "start"] },
+        { id: "civil", d: "M48 240H250L300 290", b: [48, 240], t: [34, 212, "start"] },
+        { id: "industrial", d: "M48 360H250L300 310", b: [48, 360], t: [34, 408, "start"] },
+        { id: "mecanica", d: "M48 482H180L300 362", b: [48, 482], t: [34, 530, "start"] },
+        { id: "quimica", d: "M672 118H540L420 238", b: [672, 118], t: [686, 90, "end"] },
+        { id: "sistemas", d: "M672 240H470L420 290", b: [672, 240], t: [686, 212, "end"] },
+        { id: "electronica", d: "M672 360H470L420 310", b: [672, 360], t: [686, 408, "end"] },
+        { id: "mecanica-ind", d: "M672 482H540L420 362", b: [672, 482], t: [686, 530, "end"] }
     ];
     var NS = "http://www.w3.org/2000/svg";
 
@@ -200,6 +204,12 @@
         }
         
         empty.hidden = data.candidatos.length > 0;
+        
+        var sliderControls = document.querySelector(".slider-controls");
+        if (sliderControls) {
+            sliderControls.style.display = data.candidatos.length > 0 ? "" : "none";
+        }
+
         var img = document.getElementById("mascotImg"), fig = document.getElementById("mascot");
         if (data.mascota) { img.src = data.mascota; fig.classList.remove("is-empty"); } 
         else { fig.classList.add("is-empty"); }
@@ -391,4 +401,30 @@
     } else {
         reveals.forEach(function(r) { r.classList.add("is-in"); });
     }
+    document.addEventListener("DOMContentLoaded", function() {
+    const track = document.getElementById("cands");
+    const btnPrev = document.getElementById("prevCand");
+    const btnNext = document.getElementById("nextCand");
+
+    if (track && btnPrev && btnNext) {
+        // Al hacer clic en Anterior
+        btnPrev.addEventListener("click", function() {
+            if (track.children.length > 0) {
+                // Calcula el ancho de la tarjeta + el espacio (gap)
+                const cardWidth = track.children[0].offsetWidth;
+                const gap = parseFloat(getComputedStyle(track).gap) || 0;
+                track.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+            }
+        });
+
+        // Al hacer clic en Siguiente
+        btnNext.addEventListener("click", function() {
+            if (track.children.length > 0) {
+                const cardWidth = track.children[0].offsetWidth;
+                const gap = parseFloat(getComputedStyle(track).gap) || 0;
+                track.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+            }
+        });
+    }
+});
 })();
